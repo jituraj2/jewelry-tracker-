@@ -6,18 +6,24 @@
 </head>
 <body>
     <h2>Jewelry Record Tracker</h2>
+
     <form id="jewelryForm">
-        <input type="file" id="jewelryImage" accept="image/*" required />
+        <input type="hidden" id="recordId" />
+        <input type="file" id="jewelryImage" accept="image/*" />
         <input type="text" id="jewelryName" placeholder="Jewelry Name" required />
         <input type="number" id="gram" placeholder="Weight (grams)" required />
         <input type="number" id="amount" placeholder="Amount" required />
         <input type="date" id="purchaseDate" required />
         <input type="text" id="shopName" placeholder="Shop Name" required />
-        <input type="file" id="billImage" accept="image/*" required />
+        <input type="file" id="billImage" accept="image/*" />
         <button type="submit">Save</button>
     </form>
+
+    <hr>
+
+    <h3>Saved Records</h3>
+    <div id="recordList"></div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
-
