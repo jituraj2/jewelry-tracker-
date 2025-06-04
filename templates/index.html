@@ -1,1 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jewelry Record Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Jewelry Record Tracker</h2>
+    <form id="jewelryForm">
+        <input type="file" id="jewelryImage" accept="image/*" required />
+        <input type="text" id="jewelryName" placeholder="Jewelry Name" required />
+        <input type="number" id="gram" placeholder="Weight (grams)" required />
+        <input type="number" id="amount" placeholder="Amount" required />
+        <input type="date" id="purchaseDate" required />
+        <input type="text" id="shopName" placeholder="Shop Name" required />
+        <input type="file" id="billImage" accept="image/*" required />
+        <button type="submit">Save</button>
+    </form>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
 
