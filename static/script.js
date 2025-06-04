@@ -22,7 +22,8 @@ document.getElementById('jewelryForm').addEventListener('submit', async function
 
     existing.push(record);
     localStorage.setItem('jewelryRecords', JSON.stringify(existing));
-    alert("Record saved!");
+    showAlert("✅ Record saved successfully!");
+
     this.reset();
     loadRecords();
 });
@@ -48,22 +49,63 @@ function getImageFromStorage(id, type) {
 }
 
 function loadRecords() {
-    const container = document.getElementById('recordList');
-    container.innerHTML = '';
-    const records = getRecords();
+    const tbody = document.querySelector("#recordTable tbody");
+    tbody.innerHTML = '';
 
+    const records = getRecords();
     if (records.length === 0) {
-        container.innerHTML = '<p>No records found.</p>';
+        tbody.innerHTML = '<tr><td colspan="7">No records found.</td></tr>';
         return;
     }
 
     records.forEach(record => {
-        const div = document.createElement('div');
-        div.className = 'record';
-        div.innerHTML = `
-            <strong>${record.jewelryName}</strong><br>
-            🪙 ${record.gram}g | 💰 ₹${record.amount} | 🗓️ ${record.purchaseDate} <br>
-            🏬 ${record.shopName}<br>
-            <img src="${record.jewelryImage}" width="100" alt="Jewelry Image">
-            <img src="${record.billImage}" width="100" alt="Bill Image"><br>
-            <butto
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${record.jewelryName}</td>
+            <td>${record.gram}g</td>
+            <td>₹${record.amount}</td>
+            <td>${record.purchaseDate}</td>
+            <td>${record.shopName}</td>
+            <td>
+                <img src="${record.jewelryImage}" width="50" />
+                <img src="${record.billImage}" width="50" />
+            </td>
+            <td>
+                <button onclick="editRecord('${record.id}')">✏️ Edit</button>
+                <button onclick="deleteRecord('${record.id}')">🗑️ Delete</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function editRecord(id) {
+    const record = getRecords().find(r => r.id === id);
+    if (!record) return;
+
+    document.getElementById('recordId').value = record.id;
+    document.getElementById('jewelryName').value = record.jewelryName;
+    document.getElementById('gram').value = record.gram;
+    document.getElementById('amount').value = record.amount;
+    document.getElementById('purchaseDate').value = record.purchaseDate;
+    document.getElementById('shopName').value = record.shopName;
+
+    showAlert("✏️ Now editing. Make changes and press Save.");
+}
+
+function deleteRecord(id) {
+    if (!confirm("Are you sure you want to delete this record?")) return;
+    const updated = getRecords().filter(r => r.id !== id);
+    localStorage.setItem('jewelryRecords', JSON.stringify(updated));
+    loadRecords();
+    showAlert("🗑️ Record deleted.");
+}
+
+function showAlert(msg) {
+    const alertBox = document.getElementById('alert');
+    alertBox.textContent = msg;
+    alertBox.style.display = 'block';
+    setTimeout(() => {
+        alertBox.style.display = 'none';
+    }, 3000);
+}
