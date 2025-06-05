@@ -109,3 +109,7 @@ function showAlert(msg) {
         alertBox.style.display = 'none';
     }, 3000);
 }
+function logout() {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "signin.html";
+}
