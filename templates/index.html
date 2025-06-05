@@ -2,14 +2,50 @@
 <html>
 <head>
     <title>Jewelry Record Tracker</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="static/style.css">
+    <style>
+        #userProfile {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        #userProfile img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+        }
+        #logoutBtn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
 </head>
-    <button onclick="logout()" style="float: right;">🚪 Logout</button>
-    <div id="userProfile"></div>
-
-
 <body>
+    <!-- 🔐 Login Check -->
+    <script>
+        const email = localStorage.getItem("loggedInUser");
+        const users = JSON.parse(localStorage.getItem("users")) || {};
+        const user = users[email];
+        if (!email || !user) {
+            alert("Please log in first.");
+            window.location.href = "signin.html";
+        }
+    </script>
+
     <div class="container">
+        <div id="userProfile">
+            <div>
+                <strong>Welcome, <span id="userName"></span></strong>
+                <img id="profilePic" src="" alt="Profile" style="display:none;">
+            </div>
+            <button id="logoutBtn" onclick="logout()">🚪 Logout</button>
+        </div>
+
         <h2>💎 Jewelry Record Tracker</h2>
 
         <form id="jewelryForm">
@@ -58,17 +94,26 @@
             </thead>
             <tbody></tbody>
         </table>
+
+        <p>Total Records: <span id="recordCount">0</span></p>
+        <button onclick="exportTableToPDF()">📄 Export to PDF</button>
     </div>
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
-</body>
-
+    <script src="static/script.js"></script>
     <script>
-  const user = localStorage.getItem("loggedInUser");
-  if (!user) {
-    alert("Please log in first.");
-    window.location.href = "signin.html";
-  }
-</script>
+        function logout() {
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "signin.html";
+        }
 
+        if (user) {
+            document.getElementById("userName").textContent = user.name;
+            if (user.profilePic) {
+                const img = document.getElementById("profilePic");
+                img.src = user.profilePic;
+                img.style.display = "inline-block";
+            }
+        }
+    </script>
+</body>
 </html>
