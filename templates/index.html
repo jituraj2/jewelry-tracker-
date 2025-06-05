@@ -58,4 +58,13 @@
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
+
+    <script>
+  const user = localStorage.getItem("loggedInUser");
+  if (!user) {
+    alert("Please log in first.");
+    window.location.href = "signin.html";
+  }
+</script>
+
 </html>
