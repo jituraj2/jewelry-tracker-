@@ -113,3 +113,12 @@ function logout() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "signin.html";
 }
+const email = localStorage.getItem("loggedInUser");
+const users = JSON.parse(localStorage.getItem("users")) || {};
+const user = users[email];
+if (user) {
+  document.getElementById("userProfile").innerHTML = `
+    <p>Welcome, ${user.name}</p>
+    ${user.profilePic ? `<img src="${user.profilePic}" width="50" style="border-radius: 50%;">` : ''}
+  `;
+}
