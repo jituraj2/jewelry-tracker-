@@ -18,6 +18,15 @@
             <a href="/signup">Create Account</a> |
             <a href="/reset">Forgot Password?</a>
         </p>
+
+        <form method="POST" action="/signin">
+    <label>Email:</label>
+    <input type="email" name="email" required />
+    <label>Password:</label>
+    <input type="password" name="password" required />
+    <button type="submit">Sign In</button>
+</form>
+
     </div>
 
     <script src="{{ url_for('static', filename='auth.js') }}"></script>
