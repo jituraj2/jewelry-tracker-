@@ -33,7 +33,7 @@
         const user = users[email];
         if (!email || !user) {
             alert("Please log in first.");
-            window.location.href = "signin.html";
+            window.location.href = "signin";
         }
     </script>
 
@@ -103,7 +103,7 @@
     <script>
         function logout() {
             localStorage.removeItem("loggedInUser");
-            window.location.href = "signin.html";
+            window.location.href = "signin";
         }
 
         if (user) {
