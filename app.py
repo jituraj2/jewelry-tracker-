@@ -1,28 +1,15 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+import json
+import os
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key_here'  # Replace with a secure key
 
 @app.route('/')
 def index():
+    if 'user' not in session:
+        return redirect(url_for('signin'))
     return render_template('index.html')
-
-@app.route('/signin')
-def signin():
-    return render_template('signin.html')
-
-@app.route('/signup')
-def signup():
-    return render_template('signup.html')
-
-@app.route('/reset')
-def reset():
-    return render_template('reset.html')
-
-import os
-
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(debug=True, host='0.0.0.0', port=port)
 
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
@@ -30,24 +17,25 @@ def signin():
         email = request.form['email']
         password = request.form['password']
 
-        # Load users
-        with open('users.json', 'r') as f:
-            users = json.load(f)
+        # Load user data
+        if os.path.exists('users.json'):
+            with open('users.json', 'r') as f:
+                users = json.load(f)
+        else:
+            users = []
 
         user = next((u for u in users if u['email'] == email and u['password'] == password), None)
 
         if user:
-            session['user'] = user['email']
-            return redirect(url_for('index'))  # 🔁 Redirect to the main page
+            session['user'] = email
+            return redirect(url_for('index'))
         else:
-            flash("Invalid credentials. Please try again.")
+            flash('Invalid email or password.')
             return redirect(url_for('signin'))
 
-    return render_template('signin')
+    return render_template('signin.html')
 
 @app.route('/logout')
 def logout():
     session.pop('user', None)
     return redirect(url_for('signin'))
-
-
