@@ -17,7 +17,7 @@ if (document.getElementById("signupForm")) {
     users[email] = { name, mobile, email, password, profilePic };
     localStorage.setItem("users", JSON.stringify(users));
     alert("Sign up successful!");
-    window.location.href = "signin.html";
+    window.location.href = "signin";
   });
 }
 
@@ -32,7 +32,7 @@ if (document.getElementById("signinForm")) {
     if (users[email] && users[email].password === password) {
       localStorage.setItem("loggedInUser", email);
       alert("Login successful!");
-      window.location.href = "index.html";
+      window.location.href = "index";
     } else {
       alert("Invalid credentials");
     }
@@ -54,7 +54,7 @@ if (document.getElementById("resetForm")) {
     users[email].password = newPassword;
     localStorage.setItem("users", JSON.stringify(users));
     alert("Password reset successfully!");
-    window.location.href = "signin.html";
+    window.location.href = "signin";
   });
 }
 
