@@ -43,5 +43,11 @@ def signin():
             flash("Invalid credentials. Please try again.")
             return redirect(url_for('signin'))
 
-    return render_template('signin.html')
+    return render_template('signin')
+
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('signin'))
+
 
