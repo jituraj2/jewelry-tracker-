@@ -1,23 +1,21 @@
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 import json
 import os
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Change this to something secure
+app.secret_key = 'super_secret_key'  # Change this to something secure
 
 USER_FILE = 'users.json'
 
-# Create users.json if not exists
+# Ensure users.json exists
 if not os.path.exists(USER_FILE):
     with open(USER_FILE, 'w') as f:
         json.dump({}, f)
 
-# Load users from JSON
 def load_users():
     with open(USER_FILE, 'r') as f:
         return json.load(f)
 
-# Save users to JSON
 def save_users(users):
     with open(USER_FILE, 'w') as f:
         json.dump(users, f, indent=4)
@@ -26,7 +24,7 @@ def save_users(users):
 def index():
     if 'user' not in session:
         return redirect(url_for('signin'))
-    return render_template('index.html')
+    return render_template('index.html', user=session['user'])
 
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
@@ -38,10 +36,12 @@ def signin():
 
         if user and user['password'] == password:
             session['user'] = email
+            flash("Login successful!", "success")
             return redirect(url_for('index'))
         else:
-            return render_template('signin.html', error="Invalid credentials")
-    
+            flash("Invalid email or password.", "error")
+            return redirect(url_for('signin'))
+
     return render_template('signin.html')
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -54,8 +54,10 @@ def signup():
         profile = request.form.get('profile') or ''
 
         users = load_users()
+
         if email in users:
-            return render_template('signup.html', error="User already exists")
+            flash("User already exists!", "error")
+            return redirect(url_for('signup'))
 
         users[email] = {
             'name': name,
@@ -65,7 +67,8 @@ def signup():
         }
 
         save_users(users)
-        session['user'] = email  # Auto-login after signup
+        session['user'] = email
+        flash("Signup successful!", "success")
         return redirect(url_for('index'))
 
     return render_template('signup.html')
@@ -80,15 +83,18 @@ def reset():
         if email in users:
             users[email]['password'] = new_password
             save_users(users)
+            flash("Password reset successful!", "success")
             return redirect(url_for('signin'))
         else:
-            return render_template('reset.html', error="User not found")
+            flash("User not found!", "error")
+            return redirect(url_for('reset'))
 
     return render_template('reset.html')
 
 @app.route('/logout')
 def logout():
     session.pop('user', None)
+    flash("Logged out successfully.", "info")
     return redirect(url_for('signin'))
 
 if __name__ == '__main__':
